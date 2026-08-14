@@ -328,7 +328,6 @@
       "combat": {
         "damage": 1,
         "damageSeverity": "minor",
-        "poolDamage": 0,
         "armor": 0
       },
       "description": "",
@@ -386,8 +385,7 @@
       "combat": {
         "armor": 0,
         "damage": 3,
-        "damageSeverity": "minor",
-        "poolDamage": 0
+        "damageSeverity": "minor"
       },
       "description": "",
       "notes": "<p><strong>Character Benefit:</strong>&nbsp;</p><p><strong>Background:</strong>&nbsp;</p><p><strong>Description:</strong>&nbsp;</p>",
@@ -448,7 +446,6 @@
       "combat": {
         "damage": 0,
         "damageSeverity": "minor",
-        "poolDamage": 0,
         "armor": 0
       },
       "description": "",

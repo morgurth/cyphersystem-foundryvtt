@@ -824,9 +824,6 @@ async function migrationActorV4ToV5(actor) {
     if (updateData.system.combat.damageSeverity == null) {
       updateData.system.combat.damageSeverity = "minor";
     }
-    if (updateData.system.combat.poolDamage == null) {
-      updateData.system.combat.poolDamage = 0;
-    }
   }
 
   // Update to version 5

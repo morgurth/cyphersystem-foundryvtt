@@ -100,8 +100,13 @@ function prepareWounds(wounds) {
   if (!wounds) return;
   for (let severity of ["minor", "moderate", "major"]) {
     if (!wounds[severity]) continue;
-    wounds[severity].max = 3 + (wounds[severity].extra || 0);
-    wounds[severity].value = Math.min(wounds[severity].value || 0, wounds[severity].max);
+    const extra = Math.min(3, Math.max(0, Number.parseInt(wounds[severity].extra, 10) || 0));
+    wounds[severity].max = 3 + extra;
+    wounds[severity].value = Math.min(
+      Math.max(Number.parseInt(wounds[severity].value, 10) || 0, 0),
+      wounds[severity].max
+    );
   }
   wounds.dead = (wounds.major.value >= wounds.major.max);
+  wounds.hindered = (wounds.moderate.value >= wounds.moderate.max) ? (1 + wounds.major.value) : 0;
 }

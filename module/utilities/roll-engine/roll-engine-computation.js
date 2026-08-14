@@ -62,6 +62,15 @@ export async function rollEngineComputation(data) {
     data.stressModifier = 0;
   }
 
+  // Determine wound hindrance (new damage rules)
+  data.woundHindered = 0;
+  if (game.settings.get("cyphersystem", "damageRules") == "new" && actor.type == "pc") {
+    const wounds = (data.teen) ? actor.system.teen.combat.wounds : actor.system.combat.wounds;
+    if (wounds && wounds.moderate && wounds.moderate.max && wounds.moderate.value >= wounds.moderate.max) {
+      data.woundHindered = 1 + (wounds.major.value || 0);
+    }
+  }
+
   // Calculate damage
   data.damageEffort = data.damagePerLOE * data.effortDamage;
   data.totalDamage = data.damage + data.damageEffort;
@@ -100,7 +109,7 @@ export async function rollEngineComputation(data) {
   let difficultyModifier =
     data.easedOrHindered == "hindered" ? data.difficultyModifier * -1 : data.difficultyModifier;
   data.difficultyModifierTotal =
-    data.skillLevel + data.assets + data.effortToEase + difficultyModifier - data.stressModifier;
+    data.skillLevel + data.assets + data.effortToEase + difficultyModifier - data.stressModifier - data.woundHindered;
 
   // Calculate rollTotal
   data.rollTotal = data.roll.total + data.bonus + data.advantage;

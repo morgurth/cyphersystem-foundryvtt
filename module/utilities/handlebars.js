@@ -31,13 +31,20 @@ export async function registerHandlebars() {
   Handlebars.registerHelper("woundBoxes", function (wounds, severity, isObserver) {
     const severityData = wounds[severity];
     if (!severityData) return "";
-    const max = severityData.max || 3;
-    const value = severityData.value || 0;
+    const max = Math.min(6, Math.max(3, Number.parseInt(severityData.max, 10) || 3));
+    const value = Math.min(Math.max(Number.parseInt(severityData.value, 10) || 0, 0), max);
     const disabled = (isObserver) ? "disabled" : "";
     let output = "";
     for (let i = 1; i <= max; i++) {
       const filled = (i <= value) ? "filled" : "";
-      output += `<a class="wound-box ${filled} ${disabled}" data-severity="${severity}" data-box="${i}" title="${i}"></a>`;
+      let marker = "";
+      if (severity == "moderate" && i == max) {
+        marker = "H";
+      } else if (severity == "major") {
+        marker = (i < max) ? "H" : '<i class="fa-item fas fa-skull"></i>';
+      }
+      const markerHtml = (marker) ? `<span class="wound-marker">${marker}</span>` : "";
+      output += `<a class="wound-box ${filled} ${disabled}" data-severity="${severity}" data-box="${i}" title="${i}">${markerHtml}</a>`;
     }
     return output;
   });

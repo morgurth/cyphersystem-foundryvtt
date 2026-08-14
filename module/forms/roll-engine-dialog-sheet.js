@@ -82,6 +82,19 @@ export class RollEngineDialogSheet extends FormApplication {
       data.impairedString = game.i18n.localize("CYPHERSYSTEM.PCIsDebilitated");
     }
 
+    // Wound hindrance (new damage rules)
+    data.woundHinderedString = "";
+    if (
+      game.settings.get("cyphersystem", "damageRules") == "new" &&
+      actor.type == "pc"
+    ) {
+      const wounds = (data.teen) ? actor.system.teen.combat.wounds : actor.system.combat.wounds;
+      if (wounds && wounds.moderate && wounds.moderate.max && wounds.moderate.value >= wounds.moderate.max) {
+        const hindered = 1 + (wounds.major.value || 0);
+        data.woundHinderedString = game.i18n.format("CYPHERSYSTEM.WoundHindered", {amount: hindered});
+      }
+    }
+
     // Stress
     data.stressModifier = 0;
     if (actor.system.settings.combat.stress.active && !data.teen) {
@@ -290,6 +303,19 @@ export class RollEngineDialogSheet extends FormApplication {
       actor.system.combat.damageTrack.applyDebilitated
     ) {
       data.impairedString = game.i18n.localize("CYPHERSYSTEM.PCIsDebilitated");
+    }
+
+    // Wound hindrance (new damage rules)
+    data.woundHinderedString = "";
+    if (
+      game.settings.get("cyphersystem", "damageRules") == "new" &&
+      actor.type == "pc"
+    ) {
+      const wounds = (data.teen) ? actor.system.teen.combat.wounds : actor.system.combat.wounds;
+      if (wounds && wounds.moderate && wounds.moderate.max && wounds.moderate.value >= wounds.moderate.max) {
+        const hindered = 1 + (wounds.major.value || 0);
+        data.woundHinderedString = game.i18n.format("CYPHERSYSTEM.WoundHindered", {amount: hindered});
+      }
     }
 
     // Stress

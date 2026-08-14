@@ -164,6 +164,12 @@
             <div class="item-name">{{localize 'CYPHERSYSTEM.DeadEffect'}}</div>
           </li>
         {{/if}}
+        {{#if actor.system.teen.combat.wounds.hindered}}
+          <li class="item flexrow non-draggable wound-hindered">
+            <div class="item-name">{{localize 'CYPHERSYSTEM.WoundHinderedLabel'}}</div>
+            <div class="item-quantity">-{{actor.system.teen.combat.wounds.hindered}}</div>
+          </li>
+        {{/if}}
       {{else}}
         {{#each woundSeverityList as |severity|}}
           <li class="item flexrow non-draggable wound-track">
@@ -175,6 +181,12 @@
         {{#if actor.system.combat.wounds.dead}}
           <li class="item flexrow non-draggable wound-dead">
             <div class="item-name">{{localize 'CYPHERSYSTEM.DeadEffect'}}</div>
+          </li>
+        {{/if}}
+        {{#if actor.system.combat.wounds.hindered}}
+          <li class="item flexrow non-draggable wound-hindered">
+            <div class="item-name">{{localize 'CYPHERSYSTEM.WoundHinderedLabel'}}</div>
+            <div class="item-quantity">-{{actor.system.combat.wounds.hindered}}</div>
           </li>
         {{/if}}
       {{/if}}
