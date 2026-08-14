@@ -10,7 +10,7 @@
     ],
     "templates": {
       "version": {
-        "version": 3
+        "version": 4
       }
     },
     "pc": {
@@ -77,6 +77,20 @@
           "state": "Hale",
           "applyImpaired": true,
           "applyDebilitated": true
+        },
+        "wounds": {
+          "minor": {
+            "value": 0,
+            "extra": 0
+          },
+          "moderate": {
+            "value": 0,
+            "extra": 0
+          },
+          "major": {
+            "value": 0,
+            "extra": 0
+          }
         },
         "stress": {
           "quantity": 0,
@@ -253,6 +267,20 @@
             "applyImpaired": true,
             "applyDebilitated": true
           },
+          "wounds": {
+            "minor": {
+              "value": 0,
+              "extra": 0
+            },
+            "moderate": {
+              "value": 0,
+              "extra": 0
+            },
+            "major": {
+              "value": 0,
+              "extra": 0
+            }
+          },
           "armor": {
             "ratingTotal": 0,
             "costTotal": 0
@@ -299,6 +327,8 @@
       },
       "combat": {
         "damage": 1,
+        "damageSeverity": "minor",
+        "poolDamage": 0,
         "armor": 0
       },
       "description": "",
@@ -355,7 +385,9 @@
       },
       "combat": {
         "armor": 0,
-        "damage": 3
+        "damage": 3,
+        "damageSeverity": "minor",
+        "poolDamage": 0
       },
       "description": "",
       "notes": "<p><strong>Character Benefit:</strong>&nbsp;</p><p><strong>Background:</strong>&nbsp;</p><p><strong>Description:</strong>&nbsp;</p>",
@@ -415,6 +447,8 @@
       },
       "combat": {
         "damage": 0,
+        "damageSeverity": "minor",
+        "poolDamage": 0,
         "armor": 0
       },
       "description": "",

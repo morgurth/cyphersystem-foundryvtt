@@ -11,6 +11,8 @@ import {
 import {isExclusiveTagActive} from "../utilities/actor-utilities.js";
 import {rollEngineMain} from "../utilities/roll-engine/roll-engine-main.js";
 import {disableMultiRoll} from "../forms/roll-engine-dialog-sheet.js";
+import {ApplyDamageSheet} from "../forms/apply-damage-sheet.js";
+import {applyWound, clearWounds} from "../utilities/wound-utilities.js";
 
 export class CypherActorSheetPC extends CypherActorSheet {
 
@@ -149,6 +151,19 @@ export class CypherActorSheetPC extends CypherActorSheet {
       "6": 6,
     };
 
+    data.woundSeverityList = ["minor", "moderate", "major"];
+    data.woundSeverityLocalizations = {
+      "minor": "CYPHERSYSTEM.WoundMinor",
+      "moderate": "CYPHERSYSTEM.WoundModerate",
+      "major": "CYPHERSYSTEM.WoundMajor"
+    };
+    data.woundExtraChoices = {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3
+    };
+
     return data;
   }
 
@@ -251,6 +266,43 @@ export class CypherActorSheetPC extends CypherActorSheet {
     html.find('.apply-debilitated-teen').click(clickEvent => {
       let newValue = (this.actor.system.teen.combat.damage.applyDebilitated) ? false : true;
       this.actor.update({"system.teen.combat.damage.applyDebilitated": newValue});
+    });
+
+    /**
+    * Wound track functions (new damage rules)
+    */
+    // Open apply damage dialog
+    html.find('.apply-damage').click(clickEvent => {
+      new ApplyDamageSheet(this.actor).render(true);
+    });
+
+    // Clear all wounds
+    html.find('.clear-wounds').click(async clickEvent => {
+      const teen = (this.actor.system.basic.unmaskedForm == "Teen") ? true : false;
+      await clearWounds(this.actor, teen);
+    });
+
+    // Toggle wound boxes
+    html.find('.wound-box').click(async clickEvent => {
+      const element = $(clickEvent.currentTarget);
+      if (element.hasClass("disabled")) return;
+      const teen = (this.actor.system.basic.unmaskedForm == "Teen") ? true : false;
+      const severity = element.data("severity");
+      const box = element.data("box");
+      const path = (teen) ? "system.teen.combat.wounds" : "system.combat.wounds";
+      const wounds = (teen) ? this.actor.system.teen.combat.wounds : this.actor.system.combat.wounds;
+
+      if (element.hasClass("filled")) {
+        await this.actor.update({[`${path}.${severity}.value`]: box - 1});
+        if (severity == "major" && !teen && box - 1 < wounds.major.max) {
+          await this.actor.update({"system.combat.damageTrack.state": "Hale"});
+        }
+      } else {
+        const result = await applyWound(this.actor, severity, teen);
+        if (result.dead) {
+          ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.WoundDead", {name: this.actor.name}));
+        }
+      }
     });
 
     /**

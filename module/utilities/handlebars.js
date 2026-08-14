@@ -28,6 +28,20 @@ export async function registerHandlebars() {
     return sum;
   });
 
+  Handlebars.registerHelper("woundBoxes", function (wounds, severity, isObserver) {
+    const severityData = wounds[severity];
+    if (!severityData) return "";
+    const max = severityData.max || 3;
+    const value = severityData.value || 0;
+    const disabled = (isObserver) ? "disabled" : "";
+    let output = "";
+    for (let i = 1; i <= max; i++) {
+      const filled = (i <= value) ? "filled" : "";
+      output += `<a class="wound-box ${filled} ${disabled}" data-severity="${severity}" data-box="${i}" title="${i}"></a>`;
+    }
+    return output;
+  });
+
   Handlebars.registerHelper("enrichedHTMLItems", function (sheetData, type, itemID) {
     if (type == "description") return sheetData.enrichedHTML.itemDescription[itemID];
     if (type == "level") return sheetData.enrichedHTML.itemLevel[itemID];

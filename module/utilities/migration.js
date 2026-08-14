@@ -134,6 +134,10 @@ async function migrationRoutineActor(actor) {
     if (!foundry.utils.isEmpty(updateDataActorV3)) {
       await actor.update(updateDataActorV3, {enforceTypes: false});
     }
+    const updateDataActorV4 = await migrationActorV4ToV5(actor);
+    if (!foundry.utils.isEmpty(updateDataActorV4)) {
+      await actor.update(updateDataActorV4, {enforceTypes: false});
+    }
   } catch (error) {
     error.message = `Failed Cypher system migration for Actor ${actor.name}: ${error.message}`;
     console.error(error);
@@ -798,6 +802,37 @@ async function migrationActorV3ToV4(actor) {
     actor.unsetFlag("cyphersystem", "recursion");
   }
 };
+
+async function migrationActorV4ToV5(actor) {
+  if (actor.system.version != 4) return;
+
+  // Create updateData object
+  let updateData = foundry.utils.deepClone(actor.toObject());
+
+  if (actor.type == "pc") {
+    updateData.system.combat.wounds = {
+      minor: {value: 0, extra: 0},
+      moderate: {value: 0, extra: 0},
+      major: {value: 0, extra: 0}
+    };
+    updateData.system.teen.combat.wounds = {
+      minor: {value: 0, extra: 0},
+      moderate: {value: 0, extra: 0},
+      major: {value: 0, extra: 0}
+    };
+  } else if (["npc", "companion", "community"].includes(actor.type)) {
+    if (updateData.system.combat.damageSeverity == null) {
+      updateData.system.combat.damageSeverity = "minor";
+    }
+    if (updateData.system.combat.poolDamage == null) {
+      updateData.system.combat.poolDamage = 0;
+    }
+  }
+
+  // Update to version 5
+  updateData.system.version = 5;
+  return updateData;
+}
 
 async function migrationItemV1ToV2(item) {
   // Migration to new item types

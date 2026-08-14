@@ -2,6 +2,7 @@ export async function preloadTemplates() {
   const templatePaths = [
     "systems/cyphersystem/templates/headers/pc-base-info.html",
     "systems/cyphersystem/templates/headers/pc-stats.html",
+    "systems/cyphersystem/templates/headers/npc-damage-armor.html",
     "systems/cyphersystem/templates/item-lists/abilities-list-01.html",
     "systems/cyphersystem/templates/item-lists/abilities-list-02.html",
     "systems/cyphersystem/templates/item-lists/abilities-list-03.html",
@@ -60,6 +61,7 @@ export async function preloadTemplates() {
     "systems/cyphersystem/templates/tabs/settings-tab/settings-item.html",
     "systems/cyphersystem/templates/tabs/settings-tab/settings-pc.html",
     "systems/cyphersystem/templates/tabs/settings-tab/settings-tag.html",
+    "systems/cyphersystem/templates/tabs/settings-tab/settings-wound-extra.html",
     "systems/cyphersystem/templates/tabs/skills-tab/power-shifts.html",
     "systems/cyphersystem/templates/tabs/skills-tab/skills.html",
     "systems/cyphersystem/templates/tabs/tags-tab/recursions.html",

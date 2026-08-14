@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.0] - 2026-08-14
+### Added
+- New world setting "Damage Rules" to toggle between the classic damage rules and the new wound rules.
+- Under the new wound rules, PCs track minor, moderate, and major wounds (3 each, with an option of up to 3 extra boxes per severity) instead of the damage track. Wounds can be applied by clicking the wound boxes or via the new "Apply Damage" dialog, which converts numeric damage (1-3 minor, 4-7 moderate, 8+ major) or takes a severity directly and can also tick a Pool (e.g., for poison and bleeding). Damage escalates to the next severity when a severity is full, and a PC dies when the last major wound is filled.
+- Under the new wound rules, NPCs, Companions, and Communities deal damage of a severity (minor/moderate/major) instead of a numeric damage value, and gain an optional "Pool Damage" field for special effects that tick a Pool.
+- Migration of existing actors to the new wound rule fields.
+
 ## [3.5.2] - 2026-05-24
 ### Fixed
 - Fixed the combat tab not updating properly.

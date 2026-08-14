@@ -55,6 +55,14 @@ export class CypherActorSheet extends foundry.appv1.sheets.ActorSheet {
     data.sheetSettings.slashForFractions = game.settings.get("cyphersystem", "useSlashForFractions") ? "/" : "|";
     data.sheetSettings.editor = (game.settings.get("cyphersystem", "sheetEditor") == 1) ? "tinymce" : "prosemirror";
     data.sheetSettings.showOnHover = (game.settings.get("cyphersystem", "showButtonsOnHover")) ? "show-on-hover" : "";
+    data.sheetSettings.newDamageRules = game.settings.get("cyphersystem", "damageRules") == "new";
+
+    // Wound severity choices
+    data.woundSeverityChoices = {
+      "minor": "CYPHERSYSTEM.WoundMinor",
+      "moderate": "CYPHERSYSTEM.WoundModerate",
+      "major": "CYPHERSYSTEM.WoundMajor"
+    };
 
     // Enriched HTML
     data.enrichedHTML = {};

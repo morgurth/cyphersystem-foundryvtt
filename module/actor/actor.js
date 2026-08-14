@@ -55,6 +55,10 @@ export class CypherActor extends Actor {
     systemData.teen.combat.armor.armorValueTotal = teenArmorTotal;
     systemData.teen.combat.armor.speedCostTotal = teenSpeedCostTotal;
 
+    // Prepare wound track data
+    prepareWounds(systemData.combat.wounds);
+    prepareWounds(systemData.teen.combat.wounds);
+
     console.log(systemData.combat.armor.ratingTotal);
     console.log(armorTotal);
 
@@ -90,4 +94,14 @@ export class CypherActor extends Actor {
       }
     }
   }
+}
+
+function prepareWounds(wounds) {
+  if (!wounds) return;
+  for (let severity of ["minor", "moderate", "major"]) {
+    if (!wounds[severity]) continue;
+    wounds[severity].max = 3 + (wounds[severity].extra || 0);
+    wounds[severity].value = Math.min(wounds[severity].value || 0, wounds[severity].max);
+  }
+  wounds.dead = (wounds.major.value >= wounds.major.max);
 }
