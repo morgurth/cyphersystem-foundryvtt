@@ -59,8 +59,8 @@ export class CypherActor extends Actor {
     prepareWounds(systemData.combat.wounds);
     prepareWounds(systemData.teen.combat.wounds);
 
-    console.log(systemData.combat.armor.ratingTotal);
-    console.log(armorTotal);
+    //console.log(systemData.combat.armor.ratingTotal);
+    //console.log(armorTotal);
 
 
     // Calculate total modifier of attacks

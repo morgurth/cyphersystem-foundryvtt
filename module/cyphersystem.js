@@ -541,12 +541,23 @@ Hooks.on("updateCombat", function () {
   }
 });
 
-Hooks.on("renderChatMessage", function (message, html, data) {
+const chatHookName = foundry.utils.isNewerVersion(game.version, "12.999") 
+  ? "renderChatMessageHTML" 
+  : "renderChatMessage";
+
+Hooks.on(chatHookName, function (message, html, data) {
+  // Ensure $html is a jQuery object even when Foundry passes a native HTMLElement (v13+)
+  const $html = html instanceof HTMLElement ? $(html) : html;
+
   // Hide buttons
-  if (html.find(".chat-card-buttons").data("actor")) {
-    let actor = game.actors.get(html.find(".chat-card-buttons").data("actor"));
-    if (!actor.isOwner) html.find("div[class='chat-card-buttons']").addClass("chat-hidden");
+  const actorId = $html.find(".chat-card-buttons").data("actor");
+  if (actorId) {
+    let actor = game.actors.get(actorId);
+    if (!actor?.isOwner) {
+      $html.find("div[class='chat-card-buttons']").addClass("chat-hidden");
+    }
   }
+});
 
   // Event Listener to confirm cypher and artifact identification
   html.find(".confirm").click((clickEvent) => {

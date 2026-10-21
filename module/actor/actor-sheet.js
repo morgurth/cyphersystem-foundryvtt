@@ -68,9 +68,11 @@ export class CypherActorSheet extends foundry.appv1.sheets.ActorSheet {
     data.enrichedHTML = {};
 
     // --Notes and description
-    data.enrichedHTML.notes = await TextEditor.enrichHTML(this.actor.system.notes, {async: true, secrets: this.actor.isOwner, relativeTo: this.actor});
-    data.enrichedHTML.gmNotes = await TextEditor.enrichHTML(this.actor.system.gmNotes, {async: true, secrets: this.actor.isOwner, relativeTo: this.actor});
-    data.enrichedHTML.description = await TextEditor.enrichHTML(this.actor.system.description, {async: true, secrets: this.actor.isOwner, relativeTo: this.actor});
+    const enrich = foundry.applications?.ux?.TextEditor?.implementation?.enrichHTML 
+      ?? TextEditor.enrichHTML;
+    data.enrichedHTML.notes = await enrich(this.actor.system.notes, {async: true, secrets: this.actor.isOwner, relativeTo: this.actor});
+    data.enrichedHTML.gmNotes = await enrich(this.actor.system.gmNotes, {async: true, secrets: this.actor.isOwner, relativeTo: this.actor});
+    data.enrichedHTML.description = await enrich(this.actor.system.description, {async: true, secrets: this.actor.isOwner, relativeTo: this.actor});
 
     data.enrichedHTML.itemDescription = {};
     data.enrichedHTML.itemLevel = {};
