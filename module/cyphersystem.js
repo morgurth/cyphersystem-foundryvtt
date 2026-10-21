@@ -541,7 +541,8 @@ Hooks.on("updateCombat", function () {
   }
 });
 
-const chatHookName = foundry.utils.isNewerVersion(game.version, "12.999") 
+const coreVersion = game?.version ?? game?.data?.version ?? (typeof BUILD_VERSION !== "undefined" ? BUILD_VERSION : "13.0");
+const chatHookName = foundry.utils.isNewerVersion(coreVersion, "12.999") 
   ? "renderChatMessageHTML" 
   : "renderChatMessage";
 
@@ -557,14 +558,13 @@ Hooks.on(chatHookName, function (message, html, data) {
       $html.find("div[class='chat-card-buttons']").addClass("chat-hidden");
     }
   }
-});
 
   // Event Listener to confirm cypher and artifact identification
-  html.find(".confirm").click((clickEvent) => {
+  $html.find(".confirm").click((clickEvent) => {
     if (!game.user.isGM)
       return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.OnlyGMCanIdentify"));
-    let actor = game.actors.get(html.find(".confirm").data("actor"));
-    let item = actor.items.get(html.find(".confirm").data("item"));
+    let actor = game.actors.get($html.find(".confirm").data("actor"));
+    let item = actor.items.get($html.find(".confirm").data("item"));
     item.update({
       "system.basic.identified": true
     });
@@ -577,11 +577,11 @@ Hooks.on(chatHookName, function (message, html, data) {
   });
 
   // Event Listener for rerolls of stat rolls
-  html.find(".reroll-stat").click((clickEvent) => {
-    let user = html.find(".reroll-stat").data("user");
+  $html.find(".reroll-stat").click((clickEvent) => {
+    let user = $html.find(".reroll-stat").data("user");
     if (user !== game.user.id)
       return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
-    const data = html.find(".reroll-stat").data("data");
+    const data = $html.find(".reroll-stat").data("data");
     delete data["skipDialog"];
     delete data["roll"];
     data.reroll = true;
@@ -590,12 +590,12 @@ Hooks.on(chatHookName, function (message, html, data) {
   });
 
   // Event Listener for rerolls of recovery rolls
-  html.find(".reroll-recovery").click((clickEvent) => {
-    let user = html.find(".reroll-recovery").data("user");
+  $html.find(".reroll-recovery").click((clickEvent) => {
+    let user = $html.find(".reroll-recovery").data("user");
     if (user !== game.user.id)
       return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
-    let dice = html.find(".reroll-recovery").data("dice");
-    let actorUuid = html.find(".reroll-recovery").data("actor-uuid");
+    let dice = $html.find(".reroll-recovery").data("dice");
+    let actorUuid = $html.find(".reroll-recovery").data("actor-uuid");
     let actor = actorUuid.includes("Token")
       ? fromUuidSync(actorUuid).actor
       : fromUuidSync(actorUuid);
@@ -603,32 +603,32 @@ Hooks.on(chatHookName, function (message, html, data) {
   });
 
   // Event Listener for rerolls of dice rolls
-  html.find(".reroll-dice-roll").click((clickEvent) => {
-    let user = html.find(".reroll-dice-roll").data("user");
+  $html.find(".reroll-dice-roll").click((clickEvent) => {
+    let user = $html.find(".reroll-dice-roll").data("user");
     if (user !== game.user.id)
       return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
-    let dice = html.find(".reroll-dice-roll").data("dice");
+    let dice = $html.find(".reroll-dice-roll").data("dice");
     diceRollMacro(dice);
   });
 
   // Event Listener to regain pool points
-  html.find(".regain-points").click((clickEvent) => {
-    let user = html.find(".regain-points").data("user");
+  $html.find(".regain-points").click((clickEvent) => {
+    let user = $html.find(".regain-points").data("user");
     if (user !== game.user.id)
       return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
-    let actorUuid = html.find(".regain-points").data("actor-uuid");
+    let actorUuid = $html.find(".regain-points").data("actor-uuid");
     let actor = actorUuid.includes("Token")
       ? fromUuidSync(actorUuid).actor
       : fromUuidSync(actorUuid);
-    let cost = html.find(".regain-points").data("cost");
-    let pool = html.find(".regain-points").data("pool");
-    let teen = html.find(".regain-points").data("teen");
+    let cost = $html.find(".regain-points").data("cost");
+    let pool = $html.find(".regain-points").data("pool");
+    let teen = $html.find(".regain-points").data("teen");
     regainPoolPoints(actor, cost, pool, teen);
   });
 
   // Event Listener for description in chat
-  html.find(".chat-description").click((clickEvent) => {
-    const description = html.find(".chat-card-item-description");
+  $html.find(".chat-description").click((clickEvent) => {
+    const description = $html.find(".chat-card-item-description");
     if (description.hasClass("expanded")) {
       description.slideUp();
       description.toggleClass("expanded");
@@ -639,8 +639,8 @@ Hooks.on(chatHookName, function (message, html, data) {
   });
 
   // Event Listener for difficulty details in chat
-  html.find(".roll-result-difficulty").click((clickEvent) => {
-    const description = html.find(".roll-result-difficulty-details");
+  $html.find(".roll-result-difficulty").click((clickEvent) => {
+    const description = $html.find(".roll-result-difficulty-details");
     if (description.hasClass("expanded")) {
       description.slideUp();
       description.toggleClass("expanded");
@@ -651,8 +651,8 @@ Hooks.on(chatHookName, function (message, html, data) {
   });
 
   // Event Listener for damage details in chat
-  html.find(".roll-result-damage").click((clickEvent) => {
-    const description = html.find(".roll-result-damage-details");
+  $html.find(".roll-result-damage").click((clickEvent) => {
+    const description = $html.find(".roll-result-damage-details");
     if (description.hasClass("expanded")) {
       description.slideUp();
       description.toggleClass("expanded");
@@ -662,9 +662,9 @@ Hooks.on(chatHookName, function (message, html, data) {
     }
   });
 
-  // Event Listener for damage details in chat
-  html.find(".roll-result-cost").click((clickEvent) => {
-    const description = html.find(".roll-result-cost-details");
+  // Event Listener for cost details in chat
+  $html.find(".roll-result-cost").click((clickEvent) => {
+    const description = $html.find(".roll-result-cost-details");
     if (description.hasClass("expanded")) {
       description.slideUp();
       description.toggleClass("expanded");
@@ -675,8 +675,8 @@ Hooks.on(chatHookName, function (message, html, data) {
   });
 
   // Event Listener for accepting intrusions
-  html.find(".accept-intrusion").click((clickEvent) => {
-    let actor = game.actors.get(html.find(".accept-intrusion").data("actor"));
+  $html.find(".accept-intrusion").click((clickEvent) => {
+    let actor = game.actors.get($html.find(".accept-intrusion").data("actor"));
     if (!actor.isOwner)
       return ui.notifications.warn(
         game.i18n.format("CYPHERSYSTEM.IntrusionWrongPlayer", {
@@ -689,7 +689,7 @@ Hooks.on(chatHookName, function (message, html, data) {
     for (let actor of game.actors.contents) {
       if (
         actor.type === "pc" &&
-        actor._id != html.find(".accept-intrusion").data("actor") &&
+        actor._id != $html.find(".accept-intrusion").data("actor") &&
         actor.hasPlayerOwner
       ) {
         let owners = "";
@@ -720,8 +720,8 @@ Hooks.on(chatHookName, function (message, html, data) {
         apply: {
           icon: '<i class="fa-item fas fa-check"></i>',
           label: game.i18n.localize("CYPHERSYSTEM.Apply"),
-          callback: (html) =>
-            applyXPFromIntrusion(actor, html.find("#selectPC").val(), data.message._id, 1)
+          callback: (dialogHtml) =>
+            applyXPFromIntrusion(actor, $(dialogHtml).find("#selectPC").val(), data.message._id, 1)
         },
         cancel: {
           icon: '<i class="fa-item fas fa-times"></i>',
@@ -742,8 +742,8 @@ Hooks.on(chatHookName, function (message, html, data) {
   });
 
   // Event Listener for refusing intrusions
-  html.find(".refuse-intrusion").click((clickEvent) => {
-    let actor = game.actors.get(html.find(".refuse-intrusion").data("actor"));
+  $html.find(".refuse-intrusion").click((clickEvent) => {
+    let actor = game.actors.get($html.find(".refuse-intrusion").data("actor"));
     if (!actor.isOwner)
       return ui.notifications.warn(
         game.i18n.format("CYPHERSYSTEM.IntrusionWrongPlayer", {
