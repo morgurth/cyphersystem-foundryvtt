@@ -3,37 +3,35 @@ name: Create Release
 on:
   release:
     types: [published]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v3
-      
-      # Create zip file
-      - run: zip -r ./release.zip *
-      
-      # Substitute tag for changelog
-      - name: Substitute tag
-        id: substitute_tag
-        uses: ashley-taylor/regex-property-action@1.2
-        with:
-          value: ${{github.event.release.tag_name}}
-          regex: "[v.]"
-          flags: "g"
-          replacement: ""
-          
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - uses: actions/checkout@v4
 
-      # Update release with zip file
+      # Create release.zip excluding git and local script files
+      - name: Package System
+        run: |
+          zip -r ./release.zip . \
+            -x ".git/*" \
+            -x ".github/*" \
+            -x ".gitignore" \
+            -x "node_modules/*" \
+            -x "*.sh" \
+            -x "release.zip"
+
+      # Update or create release with release.zip and system.json
       - name: Update Release with Files
-        id: create_version_release
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts: './release.zip'
-          body: "Changelog: https://github.com/mrkwnzl/cyphersystem-foundryvtt/blob/develop/CHANGELOG.md#${{steps.substitute_tag.outputs.value}}---${{steps.date.outputs.date}}"
+          artifacts: './release.zip,system.json'
+          token: ${{ secrets.GITHUB_TOKEN }}
           omitDraftDuringUpdate: true
           omitPrereleaseDuringUpdate: true
