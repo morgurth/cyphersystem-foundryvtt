@@ -3,3 +3,8 @@ __MACOSX
 cyphersystem.lock
 .VSCodeCounter
 .prettierrc.json
+
+# Local deployment scripts and build artifacts
+sync-c2.sh
+sync-*.sh
+*.zip
